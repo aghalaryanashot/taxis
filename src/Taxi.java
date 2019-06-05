@@ -1,12 +1,23 @@
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import java.util.concurrent.BlockingQueue;
 
 public class Taxi extends Thread {
     private int taxiId;
+    private String rep;
+    private Dispatched dispatched;
+
+    @Override
+    public void run() {
+        saveXml(rep, dispatched);
+    }
 
     public Taxi(int id, String rep, Dispatched dispatched){
         this.taxiId = id;
-        saveXml(rep, dispatched);
+        this.rep = rep;
+        this.dispatched = dispatched;
+
     }
 
     public void saveXml(String rep, Dispatched dispatched) {
@@ -29,6 +40,10 @@ public class Taxi extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void taxiSleep() throws InterruptedException {
+        sleep(300);
     }
 
     public int getTaxiId() {

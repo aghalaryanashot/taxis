@@ -10,9 +10,10 @@ import javax.xml.xpath.XPathFactory;
 import java.io.*;
 import java.util.Queue;
 
-public class Dispatched extends Thread {
+public class Dispatched {
     private int dispatchedId;
     private int targetId;
+
 
     public Dispatched(int id, File nameFile){
         this.dispatchedId = id;

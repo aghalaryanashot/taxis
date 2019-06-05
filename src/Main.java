@@ -18,29 +18,15 @@ import java.util.concurrent.TimeUnit;
 
 public class Main {
     public static void main(String[] args) {
-        int size=0;
-        File files = new File("C:\\Users\\Ps\\Desktop\\t");
-        if (files.listFiles()!=null) {
-            size = files.listFiles().length;
-        }
-        BlockingQueue stecFila = new ArrayBlockingQueue<File>(size);
-        stecFila.addAll(Arrays.asList(files.listFiles()));
+        String reposInMass = args[0];
+        int quantityTaxi = Integer.parseInt(args[1]);
+        String reposOutXml = args[2];
+        int quantityDispatch = Integer.parseInt(args[3]);
 
-        for (int i=1;i<=100;i++){
-            Thread threadTax = null;
-            Thread threadDis = new Dispatched(i, (File)stecFila.poll());
-            threadDis.start();
-            if(i<11){
-                threadTax = new Taxi(i,"C:\\Users\\Ps\\Desktop",threadDis.);
-                threadTax.start();
-            }
-            threadTax.se
-
-        }
-
-
+        Client client = new Client(reposInMass);
+        Logic logic = new Logic(client,quantityTaxi,reposOutXml,quantityDispatch);
+        logic.run();
     }
-
 }
 
 
