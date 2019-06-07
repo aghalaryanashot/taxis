@@ -1,3 +1,5 @@
+package main.java;
+
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -8,7 +10,6 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.*;
-import java.util.Queue;
 
 public class Dispatched {
     private int dispatchedId;
@@ -17,10 +18,15 @@ public class Dispatched {
 
     public Dispatched(int id, File nameFile){
         this.dispatchedId = id;
-        this.targetId = getTargetId(nameFile);
+        this.targetId = getTargetIdOfXml(nameFile);
     }
 
-    private int getTargetId(File namefileXml){
+    public Dispatched(int id, int targetId){
+        this.dispatchedId = id;
+        this.targetId = targetId;
+    }
+
+    public int getTargetIdOfXml(File namefileXml){
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();

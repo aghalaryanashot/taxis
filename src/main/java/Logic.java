@@ -1,46 +1,46 @@
+package main.java;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class Logic {
     private String reposOutXml;
-    private int quantityDispatch;
     private int quantityTaxi;
     private ArrayList<BlockingQueue> listQueue;
-    private BlockingQueue stecNameFila = new LinkedBlockingQueue<File>();
+    private LinkedBlockingQueue stecNameFila;
 
-    public Logic(Client mess,int quantityTaxi,String reposOutXml,int quantityDispatch){
+    public Logic(Client mess, int quantityTaxi, String reposOutXml, int quantityDispatch){
         this.reposOutXml = reposOutXml;
-        fileLinkedBlockingQueue(mess.getMesseng());
-        this.quantityTaxi=quantityTaxi;
-        this.quantityDispatch=quantityDispatch;
-        this.listQueue = fillListQueue(getListQueue());
+        this.stecNameFila = fileLinkedBlockingQueue(mess.getMesseng());
+        this.quantityTaxi = quantityTaxi;
+        this.listQueue = fillListQueue(getListQueue(quantityTaxi),quantityDispatch,stecNameFila);
     }
 
-    private void fileLinkedBlockingQueue(File file) {
+    public LinkedBlockingQueue fileLinkedBlockingQueue(File file) {
+        LinkedBlockingQueue filasName = new LinkedBlockingQueue<File>();
         if(file.listFiles()!=null){
-            stecNameFila.addAll(Arrays.asList(file.listFiles()));
-        } else stecNameFila.add(file);
+            filasName.addAll(Arrays.asList(file.listFiles()));
+            return filasName;
+        } else filasName.add(file);
+        return filasName;
     }
 
     public void run(){
-        createThredTaxi(maxVallistQueue(listQueue),listQueue);
+        createThredTaxi(maxValListQueue(listQueue),listQueue,quantityTaxi);
     }
 
-
-    private ArrayList<BlockingQueue> getListQueue() {
+    public ArrayList<BlockingQueue> getListQueue(int quantityTaxi) {
         ArrayList<BlockingQueue> listQueue = new ArrayList<>();
         for (int i = 0; i < quantityTaxi; i++) {
             listQueue.add(new LinkedBlockingQueue<Dispatched>());
         }
         return listQueue;
     }
-    private ArrayList<BlockingQueue> fillListQueue(ArrayList<BlockingQueue> listQueue) {
+    public ArrayList<BlockingQueue> fillListQueue(ArrayList<BlockingQueue> listQueue,
+                                                  int quantityDispatch,LinkedBlockingQueue stecNameFila ) {
         while (stecNameFila.size()>0) {
             for (int j = 1; j <= quantityDispatch; j++) {
                 Dispatched dispatched = new Dispatched(j, (File) stecNameFila.poll());
@@ -53,7 +53,7 @@ public class Logic {
         return listQueue;
     }
 
-    private int maxVallistQueue(ArrayList<BlockingQueue> listQueue) {
+    public int maxValListQueue(ArrayList<BlockingQueue> listQueue) {
         int val = 0;
         for (BlockingQueue queue : listQueue) {
             if (queue.size() > val) {
@@ -63,7 +63,7 @@ public class Logic {
         return val;
     }
 
-    private void createThredTaxi(int val,ArrayList<BlockingQueue> listQueue) {
+    private void createThredTaxi(int val,ArrayList<BlockingQueue> listQueue,int quantityTaxi ) {
         while (val > 0) {
             try {
                 for (int i = 0; i < quantityTaxi; i++) {
@@ -75,6 +75,7 @@ public class Logic {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            val--;
         }
 
     }

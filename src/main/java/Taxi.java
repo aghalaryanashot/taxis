@@ -1,7 +1,7 @@
+package main.java;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
-import java.util.concurrent.BlockingQueue;
 
 public class Taxi extends Thread {
     private int taxiId;
@@ -11,6 +11,10 @@ public class Taxi extends Thread {
     @Override
     public void run() {
         saveXml(rep, dispatched);
+    }
+
+    public Taxi(){
+
     }
 
     public Taxi(int id, String rep, Dispatched dispatched){
@@ -35,19 +39,21 @@ public class Taxi extends Thread {
                     "<data> </data>\n" +
                     "</sometags>\n" +
                     "</message>");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public static void taxiSleep() throws InterruptedException {
-        sleep(300);
+        sleep(3000);
     }
 
     public int getTaxiId() {
         return taxiId;
+    }
+
+    public String getRep() {
+        return rep;
     }
 
 }
